@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador de Entregas</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f3f4f6;
+            --primary: #0f172a;
+            --primary-hover: #1e293b;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+            --accent: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 3rem;
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 1.5rem;
+            }
+        }
+
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .feature-item svg {
+            width: 22px;
+            height: 22px;
+            margin-right: 1rem;
+            color: var(--accent);
+        }
+
+        .quote-card {
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background-color: #fff;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .calc-btn {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1.125rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .calc-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .calc-btn:active {
+            transform: scale(0.98);
+        }
+
+        .results-panel {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f9fafb;
+            border-radius: 1rem;
+            border: 1px dashed var(--border);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .result-total {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 1rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .whatsapp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #25d366;
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .whatsapp-btn:hover {
+            opacity: 0.9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 1rem;
+            background: #dbeafe;
+            color: var(--primary);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .pac-container {
+            border-radius: 0.75rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+
+    <div class="app-container">
+        <!-- Left Column: Hero Text -->
+        <div class="hero-section">
+            <div class="mb-8">
+                <!-- Logo Placeholder - Replace src with actual logo path -->
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="bg-white p-2 rounded-xl shadow-sm border border-slate-100">
+                        <img src="https://picsum.photos/seed/delivery/200/100" alt="BJ CARGO SPA Logo" class="h-12 w-auto" referrerPolicy="no-referrer">
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900 tracking-tighter leading-none">BJ CARGO SPA</h2>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">Rápido, seguro y profesional</p>
+                    </div>
+                </div>
+            </div>
+            
+            <span class="badge">Servicio Logístico Motorizado Express</span>
+            <h1 class="mt-2">Cotiza tu envío en segundos.</h1>
+            <p>Calcula el valor de tu despacho de forma instantánea con nuestra herramienta de precisión. Sin costos ocultos, solo transparencia total.</p>
+            
+            <ul class="feature-list">
+                <li class="feature-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Base fija hasta 7 KM ($6.000 CLP)
+                </li>
+                <li class="feature-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Kilómetro extra a solo $700 CLP
+                </li>
+                <li class="feature-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Integración directa con WhatsApp
+                </li>
+            </ul>
+        </div>
+
+        <!-- Right Column: Form Card -->
+        <div class="quote-card">
+            <div class="space-y-5">
+                <!-- Origen -->
+                <div class="space-y-2">
+                    <label for="origen" class="form-label">Punto de Origen</label>
+                    <input type="text" id="origen" placeholder="Calle, Número, Comuna" 
+                        class="input-field">
+                    <input type="text" id="origen-detail" placeholder="Oficina, Depto, Piso (Opcional)" 
+                        class="input-field text-xs py-2 border-slate-100 bg-slate-50/50">
+                </div>
+
+                <!-- Destinos Container -->
+                <div id="destinos-container" class="space-y-4">
+                    <div class="destino-item space-y-2">
+                        <label for="destino-1" class="form-label">Punto de Destino 1</label>
+                        <input type="text" id="destino-1" placeholder="Calle, Número, Comuna" 
+                            class="input-field destino-input">
+                        <input type="text" id="destino-1-detail" placeholder="Oficina, Depto, Piso (Opcional)" 
+                            class="input-field destino-detail text-xs py-2 border-slate-100 bg-slate-50/50">
+                    </div>
+                </div>
+
+                <!-- Add Destination Button -->
+                <button id="btn-add-destino" class="w-full py-2 px-4 border-2 border-dashed border-slate-200 rounded-xl text-slate-500 text-sm font-bold hover:border-blue-300 hover:text-blue-500 transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Añadir otra entrega (Máx. 4)
+                </button>
+
+                <!-- Action Button -->
+                <button id="btn-calcular" class="calc-btn flex items-center justify-center gap-2">
+                    <span id="btn-text">Calcular Tarifa</span>
+                    <svg id="btn-spinner" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Result Section (Hidden by default) -->
+            <div id="result-container" class="results-panel hidden">
+                <div class="result-row">
+                    <span class="text-slate-500">Distancia Total:</span>
+                    <span id="result-distance" class="font-bold">0 km</span>
+                </div>
+                <div class="result-row">
+                    <span class="text-slate-500">Tarifa Base (7km):</span>
+                    <span class="font-bold">$6.000</span>
+                </div>
+                <div id="extra-charge-row" class="result-row hidden">
+                    <span class="text-slate-500">Recargo Distancia:</span>
+                    <span id="result-extra" class="font-bold">$0</span>
+                </div>
+                <div id="signature-charge-row" class="result-row hidden">
+                    <span class="text-slate-500">Recargo Firmas:</span>
+                    <span id="result-signature-cost" class="font-bold">$0</span>
+                </div>
+                <div id="return-charge-row" class="result-row hidden">
+                    <span class="text-slate-500">Retorno a Origen (50%):</span>
+                    <span id="result-return-cost" class="font-bold">$0</span>
+                </div>
+                
+                <div class="result-total">
+                    <span>Total:</span>
+                    <div>
+                        <span id="result-price">$0</span>
+                        <span class="text-sm font-medium text-slate-400 ml-1">+ IVA</span>
+                    </div>
+                </div>
+
+                <!-- Nuevas Opciones de Confirmación -->
+                <div class="mt-6 space-y-6 pt-6 border-t border-slate-200">
+                    <!-- Recolección de Firmas -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-700">Recolección de Firmas</h4>
+                                <p class="text-[10px] text-slate-400">+$5.000 por cada firma</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="needs-signatures" class="sr-only peer" onchange="toggleSignatureCounter()">
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        
+                        <div id="signature-counter-container" class="flex items-center justify-between hidden">
+                            <span class="text-xs font-semibold text-slate-500">Cantidad de firmas:</span>
+                            <div class="flex items-center gap-3">
+                                <button onclick="updateSignatures(-1)" class="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 active:scale-95 transition-all">-</button>
+                                <span id="signature-count" class="text-sm font-bold text-slate-700 w-4 text-center">1</span>
+                                <button onclick="updateSignatures(1)" class="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 active:scale-95 transition-all">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Retorno a Origen -->
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-700">Retorno a Origen</h4>
+                                <p class="text-[10px] text-slate-400">+50% del valor base/distancia</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="needs-return" class="sr-only peer" onchange="updateWhatsAppLink()">
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label mb-3">Tipo de Documento</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="relative flex items-center justify-center p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+                                <input type="radio" name="doc-type" value="Boleta" class="hidden" checked onchange="updateWhatsAppLink()">
+                                <span class="text-sm font-bold text-slate-600">Boleta</span>
+                            </label>
+                            <label class="relative flex items-center justify-center p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+                                <input type="radio" name="doc-type" value="Factura" class="hidden" onchange="updateWhatsAppLink()">
+                                <span class="text-sm font-bold text-slate-600">Factura</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label mb-3">Preferencia de Entrega</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="relative flex items-center justify-center p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+                                <input type="radio" name="service-type" value="Lo antes posible" class="hidden" checked onchange="updateWhatsAppLink()">
+                                <span class="text-sm font-bold text-slate-600">Inmediato</span>
+                            </label>
+                            <label class="relative flex items-center justify-center p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+                                <input type="radio" name="service-type" value="Programado" class="hidden" onchange="updateWhatsAppLink()">
+                                <span class="text-sm font-bold text-slate-600">Programado</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Selector de Fecha y Hora (Oculto por defecto) -->
+                    <div id="schedule-picker" class="hidden animate-in fade-in slide-in-from-top-2 duration-300">
+                        <label class="form-label mb-2">Fecha y Hora de Retiro</label>
+                        <input type="datetime-local" id="schedule-datetime" onchange="updateWhatsAppLink()"
+                            class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:border-blue-600 focus:ring-0 outline-none transition-all">
+                    </div>
+                </div>
+
+                <a id="whatsapp-link" href="#" target="_blank" class="whatsapp-btn">
+                    <svg class="w-5 h-5 fill-current mr-2" viewBox="0 0 24 24">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.246 2.248 3.484 5.232 3.484 8.412 0 6.556-5.338 11.892-11.893 11.892-1.997-.001-3.951-.5-5.688-1.448l-6.309 1.656zm6.29-4.143c1.589.943 3.147 1.44 4.744 1.441 5.451 0 9.892-4.442 9.894-9.892.001-2.642-1.029-5.125-2.899-6.997-1.872-1.871-4.353-2.901-6.995-2.901-5.45 0-9.891 4.441-9.894 9.892-.001 1.83.479 3.618 1.391 5.187l-1.042 3.806 3.901-1.023zm11.354-7.727c-.333-.167-1.973-.973-2.278-1.084-.303-.11-.523-.167-.744.167-.221.333-.854 1.084-1.048 1.306-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.675-1.651-.988-.88-1.654-1.967-1.848-2.299-.194-.333-.021-.514.145-.68.149-.148.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.744-1.792-1.022-2.459-.271-.649-.546-.56-.744-.57-.191-.01-.41-.011-.628-.011-.218 0-.573.082-.873.407-.3.326-1.148 1.122-1.148 2.73 0 1.608 1.17 3.16 1.333 3.382.163.222 2.304 3.52 5.583 4.937.781.337 1.39.539 1.86.688.784.248 1.497.213 2.061.129.629-.094 1.973-.806 2.251-1.583.278-.778.278-1.445.194-1.583-.083-.139-.306-.222-.639-.389z"/>
+                    </svg>
+                    Enviar por WhatsApp
+                </a>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error-message" class="mt-4 text-sm text-red-600 text-center hidden"></div>
+        </div>
+    </div>
+
+    <!-- Google Maps API -->
+    <script>
+        const GOOGLE_MAPS_API_KEY = "AIzaSyCjF2PEB4i13g91-KmKZB2zc03z4Hh2_V4";
+        const WHATSAPP_PHONE = "56951030504";
+
+        // Business Logic Constants
+        const BASE_RATE = 6000;
+        const BASE_DISTANCE_LIMIT = 7;
+        const EXTRA_KM_RATE = 700;
+        const SIGNATURE_RATE = 5000;
+
+        let autocompleteOrigen;
+        let autocompletesDestinos = [];
+        let destinoCount = 1;
+        let signatureCount = 1;
+
+        function initAutocomplete() {
+            autocompleteOrigen = new google.maps.places.Autocomplete(
+                document.getElementById('origen'),
+                { types: ['address'], componentRestrictions: { country: 'cl' } }
+            );
+            
+            // Initialize first destination
+            setupDestinoAutocomplete(1);
+        }
+
+        function setupDestinoAutocomplete(id) {
+            const input = document.getElementById(`destino-${id}`);
+            const autocomplete = new google.maps.places.Autocomplete(
+                input,
+                { types: ['address'], componentRestrictions: { country: 'cl' } }
+            );
+            autocompletesDestinos.push(autocomplete);
+        }
+
+        document.getElementById('btn-add-destino').addEventListener('click', () => {
+            if (destinoCount >= 4) return;
+            
+            destinoCount++;
+            const container = document.getElementById('destinos-container');
+            const div = document.createElement('div');
+            div.className = 'destino-item space-y-2 animate-in fade-in slide-in-from-top-2 duration-300';
+            div.innerHTML = `
+                <label for="destino-${destinoCount}" class="form-label">Punto de Destino ${destinoCount}</label>
+                <input type="text" id="destino-${destinoCount}" placeholder="Calle, Número, Comuna" 
+                    class="input-field destino-input">
+                <input type="text" id="destino-${destinoCount}-detail" placeholder="Oficina, Depto, Piso (Opcional)" 
+                    class="input-field destino-detail text-xs py-2 border-slate-100 bg-slate-50/50">
+            `;
+            container.appendChild(div);
+            setupDestinoAutocomplete(destinoCount);
+
+            if (destinoCount === 4) {
+                document.getElementById('btn-add-destino').classList.add('hidden');
+            }
+        });
+
+        function toggleSignatureCounter() {
+            const container = document.getElementById('signature-counter-container');
+            const isChecked = document.getElementById('needs-signatures').checked;
+            if (isChecked) {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+            updateWhatsAppLink();
+        }
+
+        function updateSignatures(val) {
+            signatureCount = Math.max(1, signatureCount + val);
+            document.getElementById('signature-count').textContent = signatureCount;
+            updateWhatsAppLink();
+        }
+
+        async function calculateQuote() {
+            const origen = document.getElementById('origen').value;
+            const origenDetail = document.getElementById('origen-detail').value;
+            const destinoInputs = document.querySelectorAll('.destino-input');
+            const detailInputs = document.querySelectorAll('.destino-detail');
+            
+            const destinos = Array.from(destinoInputs).map(input => input.value).filter(val => val.trim() !== "");
+            const details = Array.from(detailInputs).map(input => input.value);
+
+            const btn = document.getElementById('btn-calcular');
+            const btnText = document.getElementById('btn-text');
+            const btnSpinner = document.getElementById('btn-spinner');
+            const errorDiv = document.getElementById('error-message');
+            const resultContainer = document.getElementById('result-container');
+
+            if (!origen || destinos.length === 0) {
+                showError("Por favor, ingresa el origen y al menos un destino.");
+                return;
+            }
+
+            // UI Loading State
+            btn.disabled = true;
+            btnText.textContent = "Calculando...";
+            btnSpinner.classList.remove('hidden');
+            errorDiv.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+
+            try {
+                const service = new google.maps.DistanceMatrixService();
+                let totalDistanceMeters = 0;
+                let waypoints = [origen, ...destinos];
+
+                // Calculate distance segment by segment
+                for (let i = 0; i < waypoints.length - 1; i++) {
+                    const response = await new Promise((resolve, reject) => {
+                        service.getDistanceMatrix({
+                            origins: [waypoints[i]],
+                            destinations: [waypoints[i+1]],
+                            travelMode: google.maps.TravelMode.DRIVING,
+                            unitSystem: google.maps.UnitSystem.METRIC,
+                        }, (res, status) => {
+                            if (status === 'OK') resolve(res);
+                            else reject(status);
+                        });
+                    });
+
+                    const results = response.rows[0].elements[0];
+                    if (results.status === 'OK') {
+                        totalDistanceMeters += results.distance.value;
+                    } else {
+                        throw new Error("No se pudo calcular la ruta entre puntos.");
+                    }
+                }
+
+                const distanceKm = totalDistanceMeters / 1000;
+                const basePrice = calculateBasePrice(distanceKm);
+                
+                displayResult(basePrice, distanceKm, origen, origenDetail, destinos, details);
+            } catch (error) {
+                console.error(error);
+                showError("Error al calcular la distancia. Verifica las direcciones.");
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = "Calcular Cotización";
+                btnSpinner.classList.add('hidden');
+            }
+        }
+
+        function calculateBasePrice(km) {
+            if (km <= BASE_DISTANCE_LIMIT) {
+                return BASE_RATE;
+            } else {
+                const extraKm = Math.ceil(km - BASE_DISTANCE_LIMIT);
+                return BASE_RATE + (extraKm * EXTRA_KM_RATE);
+            }
+        }
+
+        let currentQuote = { basePrice: 0, km: 0, origen: '', origenDetail: '', destinos: [], details: [] };
+
+        function displayResult(basePrice, km, origen, origenDetail, destinos, details) {
+            const resultContainer = document.getElementById('result-container');
+            const priceSpan = document.getElementById('result-price');
+            const distanceSpan = document.getElementById('result-distance');
+            const extraRow = document.getElementById('extra-charge-row');
+            const extraSpan = document.getElementById('result-extra');
+
+            currentQuote = { basePrice, km, origen, origenDetail, destinos, details };
+
+            const formattedKm = km.toFixed(1);
+            distanceSpan.textContent = `${formattedKm} km`;
+
+            if (km > BASE_DISTANCE_LIMIT) {
+                const extraKm = Math.ceil(km - BASE_DISTANCE_LIMIT);
+                const extraCost = extraKm * EXTRA_KM_RATE;
+                extraSpan.textContent = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(extraCost);
+                extraRow.classList.remove('hidden');
+            } else {
+                extraRow.classList.add('hidden');
+            }
+
+            updateWhatsAppLink();
+
+            resultContainer.classList.remove('hidden');
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateWhatsAppLink() {
+            const waLink = document.getElementById('whatsapp-link');
+            const docType = document.querySelector('input[name="doc-type"]:checked').value;
+            const serviceType = document.querySelector('input[name="service-type"]:checked').value;
+            const schedulePicker = document.getElementById('schedule-picker');
+            const scheduleInput = document.getElementById('schedule-datetime');
+            const needsSignatures = document.getElementById('needs-signatures').checked;
+            const needsReturn = document.getElementById('needs-return').checked;
+            
+            // Signature Pricing
+            let signatureCost = 0;
+            const sigChargeRow = document.getElementById('signature-charge-row');
+            const sigCostSpan = document.getElementById('result-signature-cost');
+
+            if (needsSignatures) {
+                signatureCost = signatureCount * SIGNATURE_RATE;
+                sigCostSpan.textContent = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(signatureCost);
+                sigChargeRow.classList.remove('hidden');
+            } else {
+                sigChargeRow.classList.add('hidden');
+            }
+
+            // Return Pricing (50% of basePrice)
+            let returnCost = 0;
+            const returnChargeRow = document.getElementById('return-charge-row');
+            const returnCostSpan = document.getElementById('result-return-cost');
+
+            if (needsReturn) {
+                returnCost = Math.round(currentQuote.basePrice * 0.5);
+                returnCostSpan.textContent = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(returnCost);
+                returnChargeRow.classList.remove('hidden');
+            } else {
+                returnChargeRow.classList.add('hidden');
+            }
+
+            const totalPrice = currentQuote.basePrice + signatureCost + returnCost;
+            const formattedPrice = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(totalPrice);
+            document.getElementById('result-price').textContent = formattedPrice;
+
+            // Breakdown for WhatsApp
+            let breakdown = `\n\n📊 *Desglose del Valor:*`;
+            breakdown += `\n- Tarifa Base: $${new Intl.NumberFormat('es-CL').format(BASE_RATE)}`;
+            
+            if (currentQuote.km > BASE_DISTANCE_LIMIT) {
+                const extraKm = Math.ceil(currentQuote.km - BASE_DISTANCE_LIMIT);
+                const extraCost = extraKm * EXTRA_KM_RATE;
+                breakdown += `\n- Recargo Distancia: $${new Intl.NumberFormat('es-CL').format(extraCost)}`;
+            }
+            
+            if (needsSignatures) {
+                breakdown += `\n- Recargo Firmas (${signatureCount}): $${new Intl.NumberFormat('es-CL').format(signatureCost)}`;
+            }
+            
+            if (needsReturn) {
+                breakdown += `\n- Retorno a Origen: $${new Intl.NumberFormat('es-CL').format(returnCost)}`;
+            }
+
+            let scheduleText = "";
+            if (serviceType === "Programado") {
+                schedulePicker.classList.remove('hidden');
+                if (scheduleInput.value) {
+                    const dateObj = new Date(scheduleInput.value);
+                    const formattedDate = dateObj.toLocaleDateString('es-CL', { 
+                        day: '2-digit', month: '2-digit', year: 'numeric', 
+                        hour: '2-digit', minute: '2-digit' 
+                    });
+                    scheduleText = `\n📅 *Fecha/Hora:* ${formattedDate}`;
+                } else {
+                    scheduleText = `\n📅 *Fecha/Hora:* (No seleccionada)`;
+                }
+            } else {
+                schedulePicker.classList.add('hidden');
+            }
+            
+            const formattedKm = currentQuote.km.toFixed(1);
+            
+            const formattedOrigen = currentQuote.origenDetail 
+                ? `${currentQuote.origen} (${currentQuote.origenDetail})` 
+                : currentQuote.origen;
+
+            const destinosText = currentQuote.destinos.map((d, i) => {
+                const detail = currentQuote.details[i];
+                const address = detail ? `${d} (${detail})` : d;
+                return `🏁 *Destino ${i+1}:* ${address}`;
+            }).join('\n');
+
+            // WhatsApp Message
+            const message = `🚚 *Nueva Cotización BJ CARGO* 🚚\n\n📍 *Origen:* ${formattedOrigen}\n${destinosText}\n📏 *Distancia Total:* ${formattedKm} km\n💰 *Valor Total:* ${formattedPrice} + IVA${breakdown}\n\n📄 *Documento:* ${docType}\n🕒 *Servicio:* ${serviceType}${scheduleText}`;
+            const encodedMessage = encodeURIComponent(message);
+            waLink.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodedMessage}`;
+        }
+
+        function showError(msg) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = msg;
+            errorDiv.classList.remove('hidden');
+        }
+
+        document.getElementById('btn-calcular').addEventListener('click', calculateQuote);
+
+        // Load Google Maps Script
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initAutocomplete`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>
+
